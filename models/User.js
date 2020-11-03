@@ -2,7 +2,7 @@ const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/connection');
 const bcrypt = require('bcrypt');
 
-// create our User model 
+// create our User model
 class User extends Model {
   // set up method to run on instance data (per user) to check password
   checkPassword(loginPw) {
@@ -50,9 +50,21 @@ User.init(
       }
     }
   },
-  {
+  {  // The nested level of the object inserted is very important. Notice that the hooks property was added to the second object in User.init().
+
+    //         hooks: {
+    //         // set up beforeCreate lifecycle "hook" functionality
+    //         beforeCreate(userData) {
+    //         return bcrypt.hash(userData.password, 10).then(newUserData => {
+    //         return newUserData
+    //     });
+    //   }
+    // },
+    // That seems a bit complex for such a simple async function. Notice how we needed to create two different local variables, userData and newUserData? It's a bit clunky and hard to follow due to the two variables that store the pre-hash and post-hash data, userData and newUserData, respectively.
+    // Good thing there is another method to handle async functions that will make the code more concise and legible. We will use the async/await syntax to replace the Promise.
+    // Let's replace the function above using Promises with the new version of the exact same functionality with the async/await syntax, as shown in the code below:
     hooks: {
-      // set up before Create lifecycle "hook" functionality
+      // set up beforeCreate lifecycle "hook" functionality
       async beforeCreate(newUserData) {
         newUserData.password = await bcrypt.hash(newUserData.password, 10);
         return newUserData;
@@ -62,12 +74,13 @@ User.init(
         updatedUserData.password = await bcrypt.hash(updatedUserData.password, 10);
         return updatedUserData;
       }
+      // Before we can check to see if this hook is effective however, we must add an option to the query call. We will need to add the option { individualHooks: true }. Navigate to the query call in the user-routes.js file for the User.update function in the PUT route to update the password.
     },
     // TABLE CONFIGURATION OPTIONS GO HERE (https://sequelize.org/v5/manual/models-definition.html#configuration))
 
     // pass in our imported sequelize connection (the direct connection to our database)
     sequelize,
-    // Don't automatically create createdAt/updatedAt timestamp fields
+    // don't automatically create createdAt/updatedAt timestamp fields
     timestamps: false,
     // don't pluralize name of database table
     freezeTableName: true,

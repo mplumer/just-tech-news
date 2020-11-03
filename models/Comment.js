@@ -1,17 +1,19 @@
 const { Model, DataTypes } = require('sequelize');
+const { default: validator } = require('validator');
 const sequelize = require('../config/connection');
 
 class Comment extends Model { }
 
 Comment.init(
     {
+        // columns will go here
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true
         },
         comment_text: {
-            type: DataTypes.STRING,
+            type: DataTypes.TEXT,
             allowNull: false,
             validate: {
                 len: [1]
@@ -41,6 +43,5 @@ Comment.init(
         modelName: 'comment'
     }
 );
-
 
 module.exports = Comment;

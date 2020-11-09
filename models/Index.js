@@ -53,19 +53,23 @@ Post.hasMany(Vote, {
 
 // Note that we don't have to specify Comment as a through table like we did for Vote. This is because we don't need to access Post through Comment; we just want to see the user's comment and which post it was for. Thus, the query will be slightly different.
 Comment.belongsTo(User, {
-    foreignKey: 'user_id'
+    foreignKey: 'user_id',
+
 });
 
 Comment.belongsTo(Post, {
-    foreignKey: 'post_id'
+    foreignKey: 'post_id',
+
 });
 
 User.hasMany(Comment, {
-    foreignKey: 'user_id'
+    foreignKey: 'user_id',
+
 });
 
 Post.hasMany(Comment, {
-    foreignKey: 'post_id'
+    foreignKey: 'post_id',
+
 });
 
 module.exports = {
@@ -74,3 +78,5 @@ module.exports = {
     Vote,
     Comment
 };
+
+// That's all for the models! Now you can move on to the actual creation of a vote. You may think this will involve a new set of API endpoints at /api/vote, but because a vote belongs to a post, you'll create a new endpoint at /api/post. Doing so will also keep you in line with RESTful API standards.

@@ -14,6 +14,14 @@
       <h1>
         <a href="/">Just Tech News</a>
       </h1>
+      <nav>
+        {{#if loggedIn}}
+        <a href="/dashboard">dashboard</a>
+        <button id="logout" class="btn-no-style">logout</button>
+        {{else}}
+        <a href="/login">login</a>
+        {{/if}}
+      </nav>
     </header>
     <main>
       {{{ body }}}
@@ -23,6 +31,11 @@
     </footer>
   </div>
 
+  {{#if loggedIn}}
+  <script src="/javascript/logout.js"></script>
+  {{/if}}
+
 </body>
 
 </html>
+{{!-- Notice that there's a special placeholder in the <main> element: {{{ body }}}. This is Handlebars.js syntax for data that will be plugged in later. In this case, the data will be another, smaller template, like the contents of the homepage. --}}
